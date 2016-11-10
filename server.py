@@ -193,11 +193,11 @@ def connect_to_redis():
         redis_port = int(redis_creds['port'])
         redis_password = redis_creds['password']
     else:
-        response = os.system("ping -c 1 redis")
-	if response == 0:
-		redis_hostname = 'redis'
-	else:
-    		redis_hostname = '127.0.0.1'
+    #     response = os.system("ping -c 1 redis")
+    # if response == 0:
+    #     redis_hostname = 'redis'
+    # else:
+        redis_hostname = '127.0.0.1'
         redis_port = 6379
         redis_password = None
 

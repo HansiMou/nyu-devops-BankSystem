@@ -41,3 +41,29 @@ def step_impl(context, name, balance, active):
 @then(u'I should not see "{message}"')
 def step_impl(context, message):
     assert message not in context.resp.data
+
+# Need to fix
+@given(u'the following accounts')
+def step_impl(context):
+    accounts = {}
+    for row in context.table:
+        accounts[row['id']] = {'id': row['id'], 'name': row['name'], 'balance': row['balance'], 'active': row['active']}
+    context.server.accounts = accounts
+
+@when(u'I visit \'{url}\'')
+def step_impl(context, url):
+    context.resp = context.app.get(url)
+    assert context.resp.status_code == 200
+
+@then(u'I should see \'{id}\'')
+def step_impl(context, id):
+    assert id in context.resp.data
+
+@when(u'I search for \'{name}\'')
+def step_impl(context, name):
+    context.resp = context.app.get('/accounts?name=%s' % name)
+    assert context.resp.status_code == 200
+    for data in json.loads(context.resp.data):
+        assert data['name'] == name
+
+

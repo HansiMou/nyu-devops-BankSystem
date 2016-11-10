@@ -57,6 +57,35 @@ class TestBankServer(unittest.TestCase):
         # check the return message and return code
         self.assertTrue(resp.status_code == HTTP_400_BAD_REQUEST)
 
+    def test_get_account_list(self):
+        resp = self.app.get('/accounts')
+        #print 'resp_data: ' + resp.data
+        self.assertTrue( resp.status_code == HTTP_200_OK )
+        data = json.loads(resp.data)
+        self.assertTrue( len(data) ==  self.get_account_count())
+        self.assertFalse( 'nextId' in resp.data)
+
+    def test_get_account_list_with_existing_name(self):
+        resp = self.app.get('/accounts?name=Gina')
+        #print 'resp_data: ' + resp.data
+        self.assertTrue( resp.status_code == HTTP_200_OK )
+        for data in json.loads(resp.data):
+            self.assertTrue (data['name'] == 'Gina')
+        self.assertFalse( 'nextId' in resp.data)
+
+    def test_get_account_list_with_nonexisting_name(self):
+        resp = self.app.get('/accounts?name=Xi')
+        #print 'resp_data: ' + resp.data
+        self.assertTrue(resp.status_code == HTTP_404_NOT_FOUND)
+
+    def test_get_account_list_with_empty_name(self):
+        resp = self.app.get('/accounts?name=')
+        #print 'resp_data: ' + resp.data
+        self.assertTrue( resp.status_code == HTTP_200_OK )
+        data = json.loads(resp.data)
+        self.assertTrue( len(data) ==  self.get_account_count())
+        self.assertFalse( 'nextId' in resp.data)
+
 ######################################################################
 # Utility functions
 ######################################################################

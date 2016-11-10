@@ -16,3 +16,27 @@ Feature: The banking system service back-end
       | name          | balance  | active |
       | alex          | 10   | 1          |
     Then I should see 'alex' with balance '10' and active: '1'
+
+  Scenario: List all accounts
+    Given the following accounts
+      | id | name |  balance | active|
+      | 1  |  Xi  |  1000    | 1     |
+      | 2  | john |   980    | 1     |
+      | 3  | Gina |  20000   | 1     |
+      | 4  |  Xi  |  20000   | 1     |
+    When I visit '/accounts'
+    Then I should see '1'
+    And I should see '2'
+    And I should see '3'
+    And I should see '4'
+
+  Scenario: Search accounts of given name
+    Given the following accounts
+      | id | name |  balance | active|
+      | 1  |  Xi  |  1000    | 1     |
+      | 2  | john |   980    | 1     |
+      | 3  | Gina |  20000   | 1     |
+      | 4  |  Xi  |  20000   | 1     |
+    When I search for 'Xi'
+    Then I should see '1'
+    And I should see '4'
